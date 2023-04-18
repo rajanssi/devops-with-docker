@@ -48,7 +48,7 @@ Secret message is: 'You can find the source code here: https://github.com/docker
 
 **Exercise 4**
 ```console
-rajanssi@lx0-fuxi089:~$ docker run -d ubuntu sh -c "while true; do echo 'Input website:'; read website; echo 'Searching..'; sleep 1; curl http://$website; done"
+rajanssi@lx0-fuxi089:~$ docker run -d ubuntu sh -c "while true; do echo 'Input website:'; read website; echo 'Searching..'; sleep 1; curl http://helsinki.fi  ; done"
 rajanssi@lx0-fuxi089:~$ docker container ls
 CONTAINER ID   IMAGE     COMMAND                  CREATED          STATUS          PORTS     NAMES
 994100d45567   ubuntu    "sh -c 'while true; …"   55 seconds ago   Up 54 seconds             angry_davinci
