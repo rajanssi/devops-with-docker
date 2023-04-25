@@ -134,3 +134,13 @@ FROM devopsdockeruh/simple-web-service:alpine
 
 CMD server
 ```
+
+**Exercise 1.9**
+```console
+rajanssi@lx0-fuxi089:~$ docker run -v "$(pwd)/text.log:/usr/src/app/text.log" devopsdockeruh/simple-web-service 
+```
+
+**Exercise 1.10**
+```console
+rajanssi@lx0-fuxi089:~/devops/part1$ docker run -p 3000:8080 devopsdockeruh/simple-web-service server
+```
