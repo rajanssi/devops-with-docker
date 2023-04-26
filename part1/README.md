@@ -144,3 +144,18 @@ rajanssi@lx0-fuxi089:~$ docker run -v "$(pwd)/text.log:/usr/src/app/text.log" de
 ```console
 rajanssi@lx0-fuxi089:~/devops/part1$ docker run -p 3000:8080 devopsdockeruh/simple-web-service server
 ```
+
+**Exercise 1.11**
+```Dockerfile
+FROM openjdk:8
+
+EXPOSE 8080
+
+WORKDIR /usr/src/app
+
+COPY . .
+
+RUN ["./mvnw", "package"]
+
+CMD ["java", "-jar", "./target/docker-example-1.1.3.jar"]
+```
