@@ -1,10 +1,8 @@
 #!/bin/sh
 
-while true
-do
-  echo "Input website:"
-  read website; echo "Searching.."
-  sleep 1; curl http://$website
-done
+echo "Searching..";
+echo $1
+sleep 1;
+curl http://$1;
 
 
