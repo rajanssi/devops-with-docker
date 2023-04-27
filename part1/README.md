@@ -159,3 +159,81 @@ RUN ["./mvnw", "package"]
 
 CMD ["java", "-jar", "./target/docker-example-1.1.3.jar"]
 ```
+
+**Exercise 1.12**
+```Dockerfile
+FROM node:16
+
+EXPOSE 5000
+
+WORKDIR /usr/src/app
+
+COPY . .
+
+RUN npm install
+
+RUN npm run build
+
+RUN npm install -g serve
+
+CMD ["serve", "-s", "-l", "5000", "build"]
+```
+
+**Exercise 1.13**
+```Dockerfile
+FROM golang:1.16
+
+EXPOSE 8080
+
+WORKDIR /usr/src/app
+
+COPY . .
+
+RUN go build
+
+CMD ["./server"]
+```
+```console
+docker run -p 8080:8080 example-backend
+```
+
+**Exercise 1.14**
+```Dockerfile
+FROM golang:1.16
+
+EXPOSE 8080
+
+WORKDIR /usr/src/app
+
+COPY . .
+
+RUN go build
+
+ENV REQUEST_ORIGIN=http://localhost:5000
+
+CMD ["./server"]
+```
+```console
+docker run -d -p 8080:8080 example-backend
+```
+
+```Dockerfile
+FROM node:16
+
+EXPOSE 5000
+
+WORKDIR /usr/src/app
+
+COPY . .
+
+RUN npm install
+
+RUN REACT_APP_BACKEND_URL=http://localhost:8080 npm run build
+
+RUN npm install -g serve
+
+CMD ["serve", "-s", "-l", "5000", "build"]
+```
+```console
+docker run -p 5000:5000 example-frontend
+```
