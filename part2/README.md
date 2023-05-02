@@ -4,7 +4,7 @@
 version: '3.8'
 
 services:
-    youtube-dl-ubuntu:
+    simple-web-service:
       image: devopsdockeruh/simple-web-service
       build: .
       volumes:
