@@ -1,12 +1,12 @@
 version: '3.8'
 
 services:
-
-    youtube-dl-ubuntu:
+    simple-web-service:
       image: devopsdockeruh/simple-web-service
       build: .
-      volumes:
-        - ./text.log:/usr/src/app/text.log
+      ports:
+        - 8080:8080
+      command: ["server"]
       container_name: simple-web-service
 
 
