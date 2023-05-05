@@ -1,12 +1,43 @@
 version: '3.8'
 
 services:
-    simple-web-service:
-      image: devopsdockeruh/simple-web-service
-      build: .
+    example-frontend:
+      image: example-frontend
+      ports:
+        - 5000:5000
+      command: ["serve", "-s", "-l", "5000", "build"]
+      container_name: frontend
+
+    example-backend:
+      image: example-backend
       ports:
         - 8080:8080
-      command: ["server"]
-      container_name: simple-web-service
+      environment:
+        - REQUEST_ORIGIN=http://localhost:5000
+        - REDIS_HOST=redis
+        - POSTGRES_HOST=postgres
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
+        - POSTGRES_DATABASE=postgres
+      command: ./server
+      container_name: backend
+
+    redis:
+      image: redis
+      container_name: redis
+
+    postgres:
+      image: postgres:13.2-alpine
+      restart: unless-stopped
+      environment:
+        POSTGRES_PASSWORD: postgres
+      container_name: postgres
+      volumes:
+      - type: bind
+        source: ./database
+        target: /var/lib/postgresql/data
+
+volumes:
+  database:
 
 

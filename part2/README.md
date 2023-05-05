@@ -24,7 +24,7 @@ services:
       ports:
         - 8080:8080
       command: ["server"]
-      container_name: simple-web-service  
+      container_name: simple-web-service
 ```
 
 **Exercise 2.3**
@@ -80,3 +80,86 @@ services:
 ```console
 rajanssi@lx0-fuxi089:~$ docker compose up --scale compute=3
 ```
+
+**Exercise 2.6**
+```yml
+version: '3.8'
+
+services:
+    example-frontend:
+      image: example-frontend
+      ports:
+        - 5000:5000
+      command: ["serve", "-s", "-l", "5000", "build"]
+      container_name: frontend
+
+    example-backend:
+      image: example-backend
+      ports:
+        - 8080:8080
+      environment:
+        - REQUEST_ORIGIN=http://localhost:5000
+        - REDIS_HOST=redis
+        - POSTGRES_HOST=postgres
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
+        - POSTGRES_DATABASE=postgres
+      command: ./server
+      container_name: backend
+
+    redis:
+      image: redis
+      container_name: redis
+
+    postgres:
+      image: postgres:13.2-alpine
+      restart: unless-stopped
+      environment:
+        POSTGRES_PASSWORD: postgres
+      container_name: postgres
+```
+**Exercise 2.7**
+```yml
+version: '3.8'
+
+services:
+    example-frontend:
+      image: example-frontend
+      ports:
+        - 5000:5000
+      command: ["serve", "-s", "-l", "5000", "build"]
+      container_name: frontend
+
+    example-backend:
+      image: example-backend
+      ports:
+        - 8080:8080
+      environment:
+        - REQUEST_ORIGIN=http://localhost:5000
+        - REDIS_HOST=redis
+        - POSTGRES_HOST=postgres
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
+        - POSTGRES_DATABASE=postgres
+      command: ./server
+      container_name: backend
+
+    redis:
+      image: redis
+      container_name: redis
+
+    postgres:
+      image: postgres:13.2-alpine
+      restart: unless-stopped
+      environment:
+        POSTGRES_PASSWORD: postgres
+      container_name: postgres
+      volumes:
+      - type: bind
+        source: ./database
+        target: /var/lib/postgresql/data
+
+volumes:
+  database:
+```
+
