@@ -13,7 +13,6 @@ services:
       ports:
         - 8080:8080
       environment:
-        - REQUEST_ORIGIN=http://localhost:5000
         - REDIS_HOST=redis
         - POSTGRES_HOST=postgres
         - POSTGRES_USER=postgres
@@ -21,6 +20,16 @@ services:
         - POSTGRES_DATABASE=postgres
       command: ./server
       container_name: backend
+
+    proxy:
+      image: nginx:latest
+      volumes:
+        - type: bind
+          source: ./nginx.conf
+          target: /etc/nginx/nginx.conf
+      ports:
+        - 80:80
+      container_name: proxy
 
     redis:
       image: redis
@@ -36,8 +45,5 @@ services:
       - type: bind
         source: ./database
         target: /var/lib/postgresql/data
-
-volumes:
-  database:
 
 
