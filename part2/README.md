@@ -163,3 +163,142 @@ volumes:
   database:
 ```
 
+**Exercise 2.8**
+```yml
+version: '3.8'
+
+services:
+    example-frontend:
+      image: example-frontend
+      ports:
+        - 5000:5000
+      command: ["serve", "-s", "-l", "5000", "build"]
+      container_name: frontend
+
+    example-backend:
+      image: example-backend
+      ports:
+        - 8080:8080
+      environment:
+        - REDIS_HOST=redis
+        - POSTGRES_HOST=postgres
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
+        - POSTGRES_DATABASE=postgres
+      command: ./server
+      container_name: backend
+
+    proxy:
+      image: nginx:latest
+      volumes:
+        - type: bind
+          source: ./nginx.conf
+          target: /etc/nginx/nginx.conf
+      ports:
+        - 80:80
+      container_name: proxy
+
+    redis:
+      image: redis
+      container_name: redis
+
+    postgres:
+      image: postgres:13.2-alpine
+      restart: unless-stopped
+      environment:
+        POSTGRES_PASSWORD: postgres
+      container_name: postgres
+      volumes:
+      - type: bind
+        source: ./database
+        target: /var/lib/postgresql/data
+```
+
+**Exercise 2.9**
+Backend REQUEST_ORIGIN was changed from http://localhost:5000 to http://localhost.
+
+Backend:
+```Dockerfile
+FROM golang:1.16
+
+EXPOSE 8080
+
+WORKDIR /usr/src/app
+
+COPY . .
+
+RUN go build
+
+ENV REQUEST_ORIGIN=http://localhost
+
+CMD ["./server"]
+```
+Frontend:
+```Dockerfile
+FROM node:16
+
+EXPOSE 5000
+
+WORKDIR /usr/src/app
+
+COPY . .
+
+RUN npm install
+
+RUN REACT_APP_BACKEND_URL=http://localhost:8080 npm run build
+
+RUN npm install -g serve
+
+CMD ["serve", "-s", "-l", "5000", "build"]
+```
+Compose:
+```yml
+version: '3.8'
+
+services:
+    example-frontend:
+      image: example-frontend
+      ports:
+        - 5000:5000
+      command: ["serve", "-s", "-l", "5000", "build"]
+      container_name: frontend
+
+    example-backend:
+      image: example-backend
+      ports:
+        - 8080:8080
+      environment:
+        - REDIS_HOST=redis
+        - POSTGRES_HOST=postgres
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
+        - POSTGRES_DATABASE=postgres
+      command: ./server
+      container_name: backend
+
+    proxy:
+      image: nginx:latest
+      volumes:
+        - type: bind
+          source: ./nginx.conf
+          target: /etc/nginx/nginx.conf
+      ports:
+        - 80:80
+      container_name: proxy
+
+    redis:
+      image: redis
+      container_name: redis
+
+    postgres:
+      image: postgres:13.2-alpine
+      restart: unless-stopped
+      environment:
+        POSTGRES_PASSWORD: postgres
+      container_name: postgres
+      volumes:
+      - type: bind
+        source: ./database
+        target: /var/lib/postgresql/data
+```
+
