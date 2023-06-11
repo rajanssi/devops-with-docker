@@ -302,3 +302,80 @@ services:
         target: /var/lib/postgresql/data
 ```
 
+** Exercise 2.10 **
+Compose:
+```yml
+version: '3.8'
+
+services:
+    example-frontend:
+      image: example-frontend
+      command: ["serve", "-s", "-l", "5000", "build"]
+      container_name: frontend
+
+    example-backend:
+      image: example-backend
+      environment:
+        - REDIS_HOST=redis
+        - POSTGRES_HOST=postgres
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
+        - POSTGRES_DATABASE=postgres
+      command: ./server
+      container_name: backend
+
+    proxy:
+      image: nginx:latest
+      volumes:
+        - type: bind
+          source: ./nginx.conf
+          target: /etc/nginx/nginx.conf
+      ports:
+        - 80:80
+      container_name: proxy
+
+    redis:
+      image: redis
+      container_name: redis
+
+    postgres:
+      image: postgres:13.2-alpine
+      restart: unless-stopped
+      environment:
+        POSTGRES_PASSWORD: postgres
+      container_name: postgres
+      volumes:
+      - type: bind
+        source: ./database
+        target: /var/lib/postgresql/data
+```
+Frontend:
+```Dockerfile
+FROM node:16
+
+EXPOSE 5000
+
+WORKDIR /usr/src/app
+
+COPY . .
+
+RUN npm install
+
+RUN REACT_APP_BACKEND_URL=http://localhost/api npm run build
+
+RUN npm install -g serve
+
+CMD ["serve", "-s", "-l", "5000", "build"]
+```
+
+```console
+rajanssi@DESKTOP-CPO38BA:~/devops-with-docker/part2$ docker run -it --rm --network host networkstatic/nmap localhost
+Starting Nmap 7.92 ( https://nmap.org ) at 2023-06-11 18:51 UTC
+Nmap scan report for localhost (127.0.0.1)
+Host is up (0.0000020s latency).
+Not shown: 999 closed tcp ports (reset)
+PORT   STATE SERVICE
+80/tcp open  http
+
+Nmap done: 1 IP address (1 host up) scanned in 0.17 seconds
+```

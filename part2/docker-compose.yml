@@ -2,16 +2,14 @@ version: '3.8'
 
 services:
     example-frontend:
-      image: example-frontend
-      ports:
-        - 5000:5000
+      build: ../material-applications/example-frontend
+      image: frontend
       command: ["serve", "-s", "-l", "5000", "build"]
       container_name: frontend
 
     example-backend:
-      image: example-backend
-      ports:
-        - 8080:8080
+      build: ../material-applications/example-backend
+      image: backend
       environment:
         - REQUEST_ORIGIN=http://localhost
         - REDIS_HOST=redis
