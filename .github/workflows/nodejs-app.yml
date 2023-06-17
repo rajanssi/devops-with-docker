@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'part3/nodejs-app/**'
+      - 'part3/express-app/**'
       - '.github/workflows/nodejs-app.yml'
 
 jobs:
