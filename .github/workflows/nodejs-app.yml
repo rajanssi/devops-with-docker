@@ -24,7 +24,7 @@ jobs:
    - name: Build and push
      uses: docker/build-push-action@v2
      with:
-      context: nodejs-app
+      context: express-app
       file: part3/express-app/Dockerfile
       push: true
       tags: rajanssi/nodejs-app:latest
